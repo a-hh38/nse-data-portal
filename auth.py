@@ -1,5 +1,11 @@
 import streamlit as st
 
+USERS = {
+    "athharva": "athharva123",
+    "keval": "keval123",
+    "vp": "vp123"
+}
+
 
 def login():
 
@@ -16,9 +22,10 @@ def login():
 
     if st.button("Login"):
 
-        users = st.secrets["users"]
-
-        if username in users and users[username] == password:
+        if (
+            username in USERS
+            and USERS[username] == password
+        ):
 
             st.session_state.authenticated = True
             st.session_state.username = username
