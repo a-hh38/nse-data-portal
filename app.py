@@ -16,7 +16,7 @@ import pandas as pd
 
 st.set_page_config(
     page_title="NSE Historical Data Portal",
-    page_icon="📈",
+    page_icon="",
     layout="wide"
 )
 
