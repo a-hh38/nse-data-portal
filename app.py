@@ -1,6 +1,11 @@
 import streamlit as st
 from auth import login, logout
-from config import INDEX_HIERARCHY, INDEX_OPTIONS
+from config import (
+    INDEX_HIERARCHY,
+    INDEX_OPTIONS,
+    TRI_HIERARCHY,
+    TRI_OPTIONS
+)
 from nse_api import get_index_data
 from io import BytesIO
 import pandas as pd
@@ -66,29 +71,31 @@ with user_col2:
 
 st.divider()
 # ------------------------
+
 # FILTERS
+
 # ------------------------
 
-st.subheader("Historical Data Filters")
-
-index_type = st.selectbox(
-    "Index Type",
-    list(INDEX_HIERARCHY.keys())
+data_type = st.selectbox(
+"Data Type",
+[
+"Historical Index Data",
+"Total Return Index Values"
+]
 )
 
-sub_index_type = st.selectbox(
-    "Sub Index Type",
-    INDEX_HIERARCHY[index_type]
-)
+if data_type == "Historical Index Data":
 
-# ------------------------
-# INDEX DROPDOWN
-# ------------------------
 
-if (
-    index_type in INDEX_OPTIONS
-    and sub_index_type in INDEX_OPTIONS[index_type]
-):
+    index_type = st.selectbox(
+        "Index Type",
+        list(INDEX_HIERARCHY.keys())
+    )
+
+    sub_index_type = st.selectbox(
+        "Sub Index Type",
+        INDEX_HIERARCHY[index_type]
+    )
 
     available_indices = sorted(
         INDEX_OPTIONS[index_type][sub_index_type].keys()
@@ -96,21 +103,43 @@ if (
 
     selected_index = st.selectbox(
         "Index",
-        available_indices
+        available_indices,
+        key="historical_index"
     )
 
-    index_name = INDEX_OPTIONS[index_type][sub_index_type][selected_index]["indexName"]
+    index_data = (
+        INDEX_OPTIONS[index_type]
+        [sub_index_type]
+        [selected_index]
+    )
 
-    name_field = INDEX_OPTIONS[index_type][sub_index_type][selected_index]["name"]
 
 else:
 
-    st.warning(
-        "No indices configured for this category yet."
+
+    index_type = "Equity"
+
+    sub_index_type = st.selectbox(
+        "Sub Index Type",
+        TRI_HIERARCHY["Equity"],
+        key="tri_sub_index"
     )
 
-    st.stop()
+    available_indices = sorted(
+        TRI_OPTIONS[sub_index_type].keys()
+    )
 
+    selected_index = st.selectbox(
+        "Index",
+        available_indices,
+        key="tri_index"
+    )
+
+    index_data = TRI_OPTIONS[sub_index_type][selected_index]
+
+
+index_name = index_data["indexName"]
+name_field = index_data["name"]
 # ------------------------
 # DATE PICKERS
 # ------------------------
@@ -152,7 +181,7 @@ with st.expander("Selected Index Details"):
 # ------------------------
 
 if st.button(
-    "📥 Fetch Historical Data",
+    "Fetch Historical Data",
     use_container_width=True):
 
     with st.spinner("Downloading..."):
@@ -164,11 +193,12 @@ if st.button(
             st.write("end_date =", end_date)
 
             df = get_index_data(
-                name_field,
-                index_name,
-                start_date,
-                end_date
-            )
+            name_field,
+            index_name,
+            start_date,
+            end_date,
+            data_type
+        )
 
             st.success(
                 f"{len(df)} rows downloaded"
@@ -194,7 +224,7 @@ if st.button(
             with download_col1:
 
                 st.download_button(
-                    "📄 Download CSV",
+                    "Download CSV",
                     csv,
                     file_name=f"{index_name}.csv",
                     mime="text/csv",
@@ -219,7 +249,7 @@ if st.button(
             with download_col2:
 
                 st.download_button(
-                    "📊 Download Excel",
+                    "Download Excel",
                     excel_buffer.getvalue(),
                     file_name=f"{index_name}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
