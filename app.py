@@ -144,22 +144,44 @@ name_field = index_data["name"]
 # DATE PICKERS
 # ------------------------
 
+from datetime import datetime
+
 date_col1, date_col2 = st.columns(2)
 
 with date_col1:
 
-    start_date_obj = st.date_input(
-        "Start Date"
+    start_date_input = st.text_input(
+        "Start Date (DD-MM-YYYY)",
+        value="01-01-2000"
     )
 
 with date_col2:
 
-    end_date_obj = st.date_input(
-        "End Date"
+    end_date_input = st.text_input(
+        "End Date (DD-MM-YYYY)",
+        value=datetime.today().strftime("%d-%m-%Y")
     )
 
-start_date = start_date_obj.strftime("%d-%b-%Y")
-end_date = end_date_obj.strftime("%d-%b-%Y")
+try:
+
+    start_date = datetime.strptime(
+        start_date_input,
+        "%d-%m-%Y"
+    ).strftime("%d-%b-%Y")
+
+    end_date = datetime.strptime(
+        end_date_input,
+        "%d-%m-%Y"
+    ).strftime("%d-%b-%Y")
+
+except ValueError:
+
+    st.error(
+        "Please enter dates in DD-MM-YYYY format (e.g. 01-01-2000)"
+    )
+
+    st.stop()
+
 
 # ------------------------
 # INDEX INFO
