@@ -332,6 +332,14 @@ INDEX_OPTIONS = {
             "NIFTY MULTI ASSET – EQUITY : DEBT : ARBITRAGE : REITS/INVITS (50:20:20:10)": {
                 "name": "NIFTY MULTI ASSET – EQUITY : DEBT : ARBITRAGE : REITS/INVITS (50:20:20:10)",
                 "indexName": "NIFTY MULTI ASSET – EQUITY : DEBT : ARBITRAGE : REITS/INVITS (50:20:20:10)"
+            },
+            "NIFTY200 MOMENTUM 30 PLUS 8-13 YR G-SEC 75:25 INDEX": {
+                "name": "NIFTY200 MOMENTUM 30 PLUS 8-13 YR G-SEC 75:25 INDEX",
+                "indexName": "NIFTY200 MOMENTUM 30 PLUS 8-13 YR G-SEC 75:25 INDEX"
+            },
+            "NIFTY200 MOMENTUM 30 PLUS 8-13 YR G-SEC 50:50 INDEX": {
+                "name": "NIFTY200 MOMENTUM 30 PLUS 8-13 YR G-SEC 50:50 INDEX",
+                "indexName": "NIFTY200 MOMENTUM 30 PLUS 8-13 YR G-SEC 50:50 INDEX"
             }
         }
     },
