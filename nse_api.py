@@ -77,31 +77,32 @@ def get_index_data(
     print("Status:", response.status_code)
     print("Content-Type:", response.headers.get("Content-Type"))
     print(response.text[:1000])
+        response.raise_for_status()
 
-    response.raise_for_status()
+    outer = response.json()
 
-   outer = response.json()
-    
-    # New NSE API already returns a list
+    # New API: response is already a list
     if isinstance(outer, list):
-    
+
         return pd.DataFrame(outer)
-    
-    # Old API returns {"d": "...json string..."}
+
+    # Old API: response is {"d": "...json string..."}
     elif isinstance(outer, dict) and "d" in outer:
-    
+
         if isinstance(outer["d"], str):
-    
+
             records = json.loads(outer["d"])
-    
+
         else:
-    
+
             records = outer["d"]
-    
+
         return pd.DataFrame(records)
-    
+
     else:
-    
+
         raise Exception(
             f"Unexpected response format:\n\n{outer}"
         )
+
+    
