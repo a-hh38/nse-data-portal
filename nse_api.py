@@ -57,52 +57,51 @@ def get_index_data(
                 f"'indexName':'{index_name}'}}"
             )
         }
-
-    session = requests.Session()
-
-    session.headers.update(HEADERS)
-
-    # Get cookies first
-    session.get(
-        "https://www.niftyindices.com/reports/historical-data",
-        timeout=30
-    )
-
-    response = session.post(
-        url,
-        json=payload,
-        timeout=30
-    )
-
-    print("Status:", response.status_code)
-    print("Content-Type:", response.headers.get("Content-Type"))
-    print(response.text[:1000])
-        response.raise_for_status()
-
-    outer = response.json()
-
-    # New API: response is already a list
-    if isinstance(outer, list):
-
-        return pd.DataFrame(outer)
-
-    # Old API: response is {"d": "...json string..."}
-    elif isinstance(outer, dict) and "d" in outer:
-
-        if isinstance(outer["d"], str):
-
-            records = json.loads(outer["d"])
-
-        else:
-
-            records = outer["d"]
-
-        return pd.DataFrame(records)
-
-    else:
-
-        raise Exception(
-            f"Unexpected response format:\n\n{outer}"
-        )
-
+        session = requests.Session()
     
+        session.headers.update(HEADERS)
+    
+        # Get cookies first
+        session.get(
+            "https://www.niftyindices.com/reports/historical-data",
+            timeout=30
+        )
+    
+        response = session.post(
+            url,
+            json=payload,
+            timeout=30
+        )
+    
+        print("Status:", response.status_code)
+        print("Content-Type:", response.headers.get("Content-Type"))
+        print(response.text[:1000])
+            response.raise_for_status()
+    
+        outer = response.json()
+    
+        # New API: response is already a list
+        if isinstance(outer, list):
+    
+            return pd.DataFrame(outer)
+    
+        # Old API: response is {"d": "...json string..."}
+        elif isinstance(outer, dict) and "d" in outer:
+    
+            if isinstance(outer["d"], str):
+    
+                records = json.loads(outer["d"])
+    
+            else:
+    
+                records = outer["d"]
+    
+            return pd.DataFrame(records)
+    
+        else:
+    
+            raise Exception(
+                f"Unexpected response format:\n\n{outer}"
+            )
+    
+        
