@@ -80,21 +80,28 @@ def get_index_data(
 
     response.raise_for_status()
 
-    try:
-        outer = response.json()
-    except Exception:
+   outer = response.json()
+    
+    # New NSE API already returns a list
+    if isinstance(outer, list):
+    
+        return pd.DataFrame(outer)
+    
+    # Old API returns {"d": "...json string..."}
+    elif isinstance(outer, dict) and "d" in outer:
+    
+        if isinstance(outer["d"], str):
+    
+            records = json.loads(outer["d"])
+    
+        else:
+    
+            records = outer["d"]
+    
+        return pd.DataFrame(records)
+    
+    else:
+    
         raise Exception(
-            f"NSE did not return JSON.\n\n"
-            f"Status: {response.status_code}\n\n"
-            f"{response.text[:1000]}"
+            f"Unexpected response format:\n\n{outer}"
         )
-
-    try:
-        records = json.loads(outer["d"])
-    except Exception:
-        raise Exception(
-            f"Unable to parse response.\n\n"
-            f"{outer}"
-        )
-
-    return pd.DataFrame(records)
