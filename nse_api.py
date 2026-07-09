@@ -50,22 +50,36 @@ data_type
                 f"'indexName':'{index_name}'}}"
             )
         }
-    print("URL =", url)
-    print("PAYLOAD =", payload)
-
-
     response = requests.post(
-        url,
-        json=payload,
-        headers=HEADERS,
-        timeout=30
+    url,
+    json=payload,
+    headers=HEADERS,
+    timeout=30
     )
-
+    
+    print("Status:", response.status_code)
+    print("Content-Type:", response.headers.get("Content-Type"))
+    print("Response:")
+    print(response.text[:1000])
+    
     response.raise_for_status()
-
-    outer = response.json()
-
-    records = json.loads(outer["d"])
-
+    
+    try:
+        outer = response.json()
+    except Exception:
+        raise Exception(
+            f"NSE did not return JSON.\n\n"
+            f"Status: {response.status_code}\n\n"
+            f"{response.text[:500]}"
+        )
+    
+    try:
+        records = json.loads(outer["d"])
+    except Exception:
+        raise Exception(
+            f"Unable to parse outer['d'].\n\n"
+            f"{outer}"
+        )
+    
     return pd.DataFrame(records)
-
+    
