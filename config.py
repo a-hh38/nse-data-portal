@@ -129,7 +129,7 @@ STRATEGY_LIST = [
 
 STRATEGY_INDICES = {
     idx: {
-        "name": f"{idx} INDEX",
+        "name": f"{idx}",
         "indexName": idx
     }
     for idx in STRATEGY_LIST
