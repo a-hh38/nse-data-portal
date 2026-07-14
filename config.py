@@ -41,7 +41,7 @@ BROAD_MARKET_LIST = [
 
 BROAD_MARKET_INDICES = {
     idx: {
-        "name": f"{idx} ",
+        "name": f"{idx} INDEX",
         "indexName": idx
     }
     for idx in BROAD_MARKET_LIST
@@ -74,7 +74,7 @@ SECTORAL_LIST = [
 
 SECTORAL_INDICES = {
     idx: {
-        "name": f"{idx} INDEX",
+        "name": f"{idx}",
         "indexName": idx
     }
     for idx in SECTORAL_LIST
