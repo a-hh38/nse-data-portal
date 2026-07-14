@@ -184,7 +184,7 @@ THEMATIC_LIST = [
 
 THEMATIC_INDICES = {
     idx: {
-        "name": f"{idx} INDEX",
+        "name": f"{idx}",
         "indexName": idx
     }
     for idx in THEMATIC_LIST
